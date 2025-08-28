@@ -1,0 +1,342 @@
+<!DOCTYPE html>
+<html lang="fa" dir="rtl">
+
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>چرت‌نما و کالری‌سنج کله‌پاچه + امکانات فان</title>
+  <link rel="stylesheet" href="style.css" />
+</head>
+
+<body class="dark-theme">
+  <div class="container">
+    <header>
+      <div class="brand">
+        <div class="logo" aria-hidden="true"></div>
+        <div>
+          <h1>چرت‌نما & کالری‌سنج کله‌پاچه + امکانات فان</h1>
+          <div class="subtitle">ابزارهای فان روزمره در یک صفحه </div>
+        </div>
+      </div>
+    </header>
+
+    <nav class="tabs" role="tablist">
+      <button class="tab" role="tab" aria-selected="true" data-target="#nap">چرت‌نما (Nap Scheduler)</button>
+      <button class="tab" role="tab" data-target="#kallepache">کالری‌سنج کله‌پاچه</button>
+      <button class="tab" role="tab" data-target="#tea">چای‌خور (Tea Meter)</button>
+      <button class="tab" role="tab" data-target="#dizi">دیزی‌کالکولاتور</button>
+      <button class="tab" role="tab" data-target="#foodname">اسم‌خوراک امروزت</button>
+      <button class="tab" role="tab" data-target="#lazy">تست تنبلی</button>
+    </nav>
+
+    <!-- Nap Scheduler Panel -->
+    <section id="nap" class="panel active" role="tabpanel" aria-labelledby="nap-tab">
+      <div class="grid">
+        <div class="card">
+          <h3>تنظیم چرت ایده‌آل</h3>
+          <div class="row">
+            <div>
+              <label>ساعت فعلی یا شروع چرت</label>
+              <input type="time" id="napStart" />
+            </div>
+            <div>
+              <label>مدت چرت (دقیقه)</label>
+              <select id="napLength">
+                <option value="20">۲۰ (چرت قدرتی)</option>
+                <option value="30">۳۰</option>
+                <option value="45">۴۵</option>
+                <option value="60">۶۰</option>
+                <option value="90">۹۰ (یک سیکل خواب)</option>
+              </select>
+            </div>
+          </div>
+          <div class="row">
+            <div>
+              <label>حالت محاسبه</label>
+              <select id="napMode">
+                <option value="fromNow">از همین حالا</option>
+                <option value="custom">من خودم زمان شروع رو می‌دم</option>
+              </select>
+            </div>
+            <div>
+              <label>هشدار بیدارباش (دقیقه قبل از پایان)</label>
+              <input type="number" id="alertBefore" min="0" max="15" value="3" />
+            </div>
+          </div>
+          <div style="display:flex; gap:8px; margin-top:10px">
+            <button class="btn" id="calcNap">محاسبه</button>
+            <button class="btn secondary" id="copyNap">کپی نتیجه</button>
+          </div>
+        </div>
+        <div class="card">
+          <h3>نتیجه</h3>
+          <div id="napResult" class="result muted">ابتدا پارامترها را وارد و «محاسبه» را بزن.</div>
+          <div id="napConfusion" class="fun-text"></div>
+        </div>
+      </div>
+      <p class="muted" style="margin-top:10px">نکته: چرت ۲۰–۳۰ دقیقه‌ای برای رفع خستگی خوب است؛ چرت ۹۰ دقیقه‌ای یک سیکل
+        کامل خواب را پوشش می‌دهد و معمولاً گیجی کمتری دارد.</p>
+    </section>
+
+    <!-- Kalleh Pacheh Panel -->
+    <section id="kallepache" class="panel" role="tabpanel" aria-labelledby="kallepache-tab">
+      <div class="grid">
+        <div class="card">
+          <h3>مواد و مقدار</h3>
+          <div class="row">
+            <div>
+              <label>واحد پیش‌فرض (گرم)</label>
+              <input type="number" id="unitGram" value="100" />
+            </div>
+            <div>
+              <label>گرد کردن نتیجه</label>
+              <select id="rounding">
+                <option value="1">بدون گرد کردن</option>
+                <option value="5">به ۵</option>
+                <option value="10">به ۱۰</option>
+              </select>
+            </div>
+          </div>
+          <div class="row">
+            <div>
+              <label>حالت خوردن</label>
+              <select id="eatingMode">
+                <option value="alone">تنهایی (همه کالری برای خودم!)</option>
+                <option value="friends">با رفقا (کالری تقسیم میشه)</option>
+              </select>
+            </div>
+            <div id="friendsCountContainer" style="display:none">
+              <label>تعداد رفقا (به جز خودت)</label>
+              <input type="number" id="friendsCount" min="1" max="20" value="3" />
+            </div>
+          </div>
+
+          <table id="itemsTable" aria-label="جدول مواد">
+            <thead>
+              <tr>
+                <th>مورد</th>
+                <th>کالری در ۱۰۰ گرم (تقریبی)</th>
+                <th>مقدار (گرم)</th>
+                <th class="right">—</th>
+              </tr>
+            </thead>
+            <tbody></tbody>
+          </table>
+          <div style="display:flex; gap:8px; margin-top:10px">
+            <button class="btn" id="addItem">افزودن مورد</button>
+            <button class="btn secondary" id="resetItems">ریست</button>
+          </div>
+          <p class="muted" style="margin-top:10px">مقادیر کالری تقریبی و صرفاً برای فان/برآورد هستند؛ برای تصمیم‌های
+            سلامتی به منابع معتبر مراجعه کن.</p>
+        </div>
+        <div class="card">
+          <h3>جمع‌بندی</h3>
+          <div id="kcalResult" class="result">
+            <div class="muted">آیتم‌ها را تنظیم کن تا نتیجه نمایش داده شود.</div>
+          </div>
+          <div id="bellyStatus" class="fun-text"></div>
+          <div style="display:flex; gap:8px; margin-top:10px">
+            <button class="btn" id="copyKcal">کپی نتیجه</button>
+            <button class="btn secondary" id="exportJSON">خروجی JSON</button>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Tea Meter Panel -->
+    <section id="tea" class="panel" role="tabpanel" aria-labelledby="tea-tab">
+      <div class="grid">
+        <div class="card">
+          <h3>چای‌خور حرفه‌ای</h3>
+          <div class="row">
+            <div>
+              <label>تعداد لیوان چای امروز</label>
+              <input type="number" id="teaCups" min="0" max="50" value="3" />
+            </div>
+            <div>
+              <label>نوع چای</label>
+              <select id="teaType">
+                <option value="1">سبز (کافئین کمتر)</option>
+                <option value="1.2" selected>سیاه (معمولی)</option>
+                <option value="1.5">پررنگ (استکان‌خورها)</option>
+              </select>
+            </div>
+          </div>
+          <div class="row">
+            <div>
+              <label>قند مصرفی (حبه)</label>
+              <input type="number" id="sugarCubes" min="0" max="30" value="2" />
+            </div>
+            <div>
+              <label>نوع شیرینی</label>
+              <select id="snackType">
+                <option value="0" selected>هیچکدام</option>
+                <option value="50">نان شیرمال</option>
+                <option value="80">کیک</option>
+                <option value="120">شیرینی خامه‌ای</option>
+              </select>
+            </div>
+          </div>
+          <div style="display:flex; gap:8px; margin-top:10px">
+            <button class="btn" id="calcTea">بررسی وضعیت</button>
+          </div>
+        </div>
+        <div class="card">
+          <h3>وضعیت چای‌خوری تو</h3>
+          <div id="teaResult" class="result muted">دکمه «بررسی وضعیت» را بزن.</div>
+          <div id="teaStatus" class="fun-text"></div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Dizi Calculator Panel -->
+    <section id="dizi" class="panel" role="tabpanel" aria-labelledby="dizi-tab">
+      <div class="grid">
+        <div class="card">
+          <h3>دیزی‌کالکولاتور</h3>
+          <div class="row">
+            <div>
+              <label>تعداد دیزی</label>
+              <input type="number" id="diziCount" min="1" max="10" value="2" />
+            </div>
+            <div>
+              <label>نوع دیزی</label>
+              <select id="diziType">
+                <option value="450">معمولی (۴۵۰ کالری)</option>
+                <option value="550">مخصوص (۵۵۰ کالری)</option>
+                <option value="650">چرب و پر (۶۵۰ کالری)</option>
+              </select>
+            </div>
+          </div>
+          <div class="row">
+            <div>
+              <label>نان مصرفی (برش)</label>
+              <input type="number" id="breadSlices" min="0" max="20" value="4" />
+            </div>
+            <div>
+              <label>ترشی/سبزی اضافی</label>
+              <select id="extraType">
+                <option value="0" selected>هیچکدام</option>
+                <option value="50">کم (۵۰ کالری)</option>
+                <option value="100">متوسط (۱۰۰ کالری)</option>
+                <option value="150">زیاد (۱۵۰ کالری)</option>
+              </select>
+            </div>
+          </div>
+          <div style="display:flex; gap:8px; margin-top:10px">
+            <button class="btn" id="calcDizi">محاسبه</button>
+          </div>
+        </div>
+        <div class="card">
+          <h3>نتیجه محاسبات دیزی</h3>
+          <div id="diziResult" class="result muted">دکمه «محاسبه» را بزن.</div>
+          <div id="diziStatus" class="fun-text"></div>
+        </div>
+      </div>
+    </section>
+
+
+    <!-- Food Name Panel -->
+    <section id="foodname" class="panel" role="tabpanel" aria-labelledby="foodname-tab">
+      <div class="grid">
+        <div class="card">
+          <h3>اسم‌خوراک امروزت</h3>
+          <div class="row">
+            <div>
+              <label>اسم تو (اختیاری)</label>
+              <input type="text" id="userName" placeholder="مثلاً: علی" />
+            </div>
+            <div>
+              <label>حالت</label>
+              <select id="foodMood">
+                <option value="random" selected>تصادفی (سپریم)</option>
+                <option value="healthy">سالم‌خوری</option>
+                <option value="cheat">چیت دی (امروز هرچه هست هست!)</option>
+              </select>
+            </div>
+          </div>
+          <div style="display:flex; gap:8px; margin-top:10px">
+            <button class="btn" id="generateFood">اسم غذای امروز</button>
+          </div>
+        </div>
+        <div class="card">
+          <h3>نتیجه</h3>
+          <div id="foodResult" class="result muted">دکمه «اسم غذای امروز» را بزن.</div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Lazy Test Panel -->
+    <section id="lazy" class="panel" role="tabpanel" aria-labelledby="lazy-tab">
+      <div class="grid">
+        <div class="card">
+          <h3>تست تنبلی</h3>
+          <p>به سوالات زیر صادقانه پاسخ بده:</p>
+
+          <div style="margin-top:16px">
+            <label>1. اگر کنترل تلویزیون از دستت بیفته، چقدر طول میکشه که برش داری؟</label>
+            <select id="q1">
+              <option value="3">فوری! مگه میشه فیلمو نصفه دید؟</option>
+              <option value="2" selected>بعد از ۵ دقیقه</option>
+              <option value="1">تا آخر فیلم صبر میکنم</option>
+            </select>
+          </div>
+
+          <div style="margin-top:16px">
+            <label>2. موقع پیام دادن، بیشتر از چه چیزی استفاده میکنی؟</label>
+            <select id="q2">
+              <option value="3">حتی "ص" رو هم کامل مینویسم "صبحت بخیر"</option>
+              <option value="2" selected>یه ترکیبی از حروف و ویس</option>
+              <option value="1">فقط ویس! حتی برای "آره"</option>
+            </select>
+          </div>
+
+          <div style="margin-top:16px">
+            <label>3. غذا درست کردن یا سفارش دادن؟</label>
+            <select id="q3">
+              <option value="1">همیشه خودم درست میکنم</option>
+              <option value="2" selected>گاهی درست میکنم، گاهی سفارش</option>
+              <option value="3">سفارش! مگه آشپزخونه دارم؟</option>
+            </select>
+          </div>
+
+          <div style="margin-top:16px">
+            <label>4. آخرین بار چه زمانی اتاقت رو تمیز کردی؟</label>
+            <select id="q4">
+              <option value="1">دیروز یا امروز</option>
+              <option value="2" selected>هفته پیش</option>
+              <option value="3">یادم نیست... شاید عید بود!</option>
+            </select>
+          </div>
+
+          <div style="margin-top:16px">
+            <label>5. اگر یه چیز از دستت بیفته زمین، چقدر سریع برمیداریش؟</label>
+            <select id="q5">
+              <option value="1">فوری</option>
+              <option value="2" selected>بعد از چند ثانیه</option>
+              <option value="3">تا زمانی که مجبور نشم از جام بلند شم</option>
+            </select>
+          </div>
+
+          <div style="display:flex; gap:8px; margin-top:10px">
+            <button class="btn" id="calcLazy">محاسبه سطح تنبلی</button>
+          </div>
+        </div>
+        <div class="card">
+          <h3>نتیجه تست تنبلی</h3>
+          <div id="lazyResult" class="result muted">به سوالات پاسخ بده و دکمه «محاسبه» را بزن.</div>
+          <div id="lazyStatus" class="fun-text"></div>
+        </div>
+      </div>
+    </section>
+
+    <footer class="footer">
+      <div>ساخته‌شده با ☕ و ❤️ برای جامعه اوپن‌سورس | <a href="https://github.com/username/repo" target="_blank">مشاهده
+          در GitHub</a></div>
+    </footer>
+  </div>
+
+  <script src="script.js"></script>
+</body>
+
+</html>
