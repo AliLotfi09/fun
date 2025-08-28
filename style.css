@@ -31,17 +31,18 @@ body {
 
 body {
   margin: 0;
-  background: radial-gradient(1200px 800px at 10% -10%, #1f2937 0%, var(--bg) 40%, #0b1022 100%);
+  background: 
+    radial-gradient(1200px 800px at 10% -10%, #1f2937 0%, var(--bg) 40%, #0b1022 100%),
+    url("assets/bg_4.png");
+  background-blend-mode: overlay;
   color: var(--text);
   display: flex;
   justify-content: center;
   align-items: center;
-  transition: background-color 0.3s, color 0.3s;
 }
 
-[data-theme="light"] body {
-  background: radial-gradient(1200px 800px at 10% -10%, #e2e8f0 0%, var(--bg) 40%, #cbd5e1 100%);
-}
+
+
 
 .container {
   max-width: 1100px;
@@ -69,7 +70,27 @@ header {
   border-radius: 12px;
   background: linear-gradient(135deg, var(--accent), var(--primary));
   box-shadow: 0 10px 30px rgba(34, 197, 94, 0.25);
+  display: flex;
+  justify-content: center;
+  align-items: center;
 }
+
+.innerLogo {
+  width: 32px;
+  animation: logoAnimation 4s ease-in-out infinite;
+}
+
+@keyframes logoAnimation {
+  0% {
+    transform: translateY(0);
+  }
+  50% {
+    transform: translateY(-5px);
+  }
+  100% {
+    transform: translateY(0);
+  }
+} 
 
 h1 {
   font-size: 22px;

@@ -17,5 +17,6 @@
 
 ## 🚀 نحوه استفاده
 1. پروژه رو کلون کن یا دانلود کن:
+
    ```bash
-   git clone https://github.com/username/repo.git
+   git clone https://github.com/AliLotfi09/fun.git
